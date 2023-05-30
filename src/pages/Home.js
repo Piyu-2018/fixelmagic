@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -24,12 +24,12 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import Popover from '@mui/material/Popover';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Input from '@mui/material/Input';
-import FormHelperText from '@mui/material/FormHelperText';
-import TextField from '@mui/material/TextField';
+
+import ShellForm from '../components/ShellForm';
+
+const shelfT = ['Small-Freeze', 'Medium-Freeze', 'Large-Freeze'];
+const shelfD = ['200x150x40cm', '400x300x80cm', '4800x600x160cm'];
+const noofPar = ['2', '5', '10'];
 
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
@@ -37,10 +37,10 @@ function createData(name, calories, fat, carbs, protein) {
 
 const rows = [
   createData('Shelf front 0001', 'Medium-Freeze', '200x150x40cm'),
-  createData('Shelf front 0001', 'Medium-Freeze', '200x150x40cm'),
-  createData('Shelf front 0001', 'Medium-Freeze', '200x150x40cm'),
-  createData('Shelf front 0001', 'Medium-Freeze', '200x150x40cm'),
-  createData('Shelf front 0001', 'Medium-Freeze', '200x150x40cm'),
+  createData('Shelf front 0002', 'Medium-Freeze', '200x150x40cm'),
+  createData('Shelf front 0003', 'Medium-Freeze', '200x150x40cm'),
+  createData('Shelf front 0004', 'Medium-Freeze', '200x150x40cm'),
+  createData('Shelf front 0005', 'Medium-Freeze', '200x150x40cm'),
 ];
 
 const drawerWidth = 240;
@@ -112,7 +112,22 @@ const Drawer = styled(MuiDrawer, {
 
 export default function Home() {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+
+  const [openValue, setOpenValue] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [shelfArray, setShelfArray] = useState([]);
+
+  const handleFormDisplay = () => {
+    setOpenValue((prevOpenValue) => !prevOpenValue);
+  };
+
+  useEffect(() => {
+    const allShelf = localStorage.getItem('allShelf')
+      ? JSON.parse(localStorage.getItem('allShelf'))
+      : [];
+    setShelfArray(allShelf);
+    // localStorage.clear();
+  }, []);
 
   //   const [anchorEl, setAnchorEl] = React.useState(null);
   //   const open = Boolean(anchorEl);
@@ -183,7 +198,13 @@ export default function Home() {
             <Button>PegBoard</Button>
           </Grid>
           <Grid display={'flex'} justifyContent={'flex-end'} item xs={4}>
-            <Button borderColor="#0062cc" variant="contained">
+            <Button
+              borderColor="#0062cc"
+              variant="contained"
+              onClick={() => {
+                handleFormDisplay();
+              }}
+            >
               <img src={require('../assets/icons/Add.png')}></img>
               <Typography padding={1}>Add Shelf</Typography>
             </Button>
@@ -193,84 +214,45 @@ export default function Home() {
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableBody>
-              {rows.map((row) => (
-                <TableRow
-                  key={row.name}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    {row.name}
-                  </TableCell>
-                  <TableCell align="right">{row.calories}</TableCell>
-                  <TableCell align="right">{row.fat}</TableCell>
-                  <TableCell align="right">
-                    <Button variant="outlined" startIcon={<DeleteIcon />}>
-                      Delete
-                    </Button>
-                  </TableCell>
-                  <TableCell align="right">
-                    <Button
-                      variant="outlined"
-                      startIcon={<DeleteIcon />}
-                    ></Button>
-                  </TableCell>
-                </TableRow>
-              ))}
+              {shelfArray.length > 0 ? (
+                shelfArray.map((row) => (
+                  <TableRow
+                    key={row.shelfID}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">
+                      {row.shelfName}
+                    </TableCell>
+                    <TableCell align="right">{shelfT[row.shelfType]}</TableCell>
+                    <TableCell align="right">
+                      {shelfD[row.shelfDimention]}
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button variant="outlined" startIcon={<DeleteIcon />}>
+                        Delete
+                      </Button>
+                    </TableCell>
+                    <TableCell align="right">
+                      <Button
+                        variant="outlined"
+                        startIcon={<DeleteIcon />}
+                      ></Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <></>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
       </Box>
 
-      <Popover
-        open={true}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-      >
-        <Box
-          display={'flex'}
-          flexDirection={'row'}
-          justifyContent="space-between"
-          alignItems={'center'}
-          padding={2}
-        >
-          <Box>
-            <Typography>@222b2hh</Typography>
-            <h2>Add new shelf</h2>
-          </Box>
-          <Button>
-            <img src={require('../assets/icons/Close.png')}></img>
-          </Button>
-        </Box>
-        <Box padding={5} display={'flex'} gap={0.5} flexDirection={'column'}>
-          <TextField id="filled-basic" label="Filled" variant="filled" />
-          <br></br>
-
-          <TextField id="filled-basic" label="Filled" variant="filled" />
-          <br></br>
-
-          <TextField id="filled-basic" label="Filled" variant="filled" />
-          <br></br>
-
-          <TextField id="filled-basic" label="Filled" variant="filled" />
-          <br></br>
-
-          <TextField id="filled-basic" label="Filled" variant="filled" />
-          <br></br>
-        </Box>
-
-        <Box>
-          <Button>
-            <img src={require('../assets/icons/Close.png')}></img>
-            <Typography padding={1}>Cancel</Typography>
-          </Button>
-          <Button variant="contained">
-            <img src={require('../assets/icons/Check-small.png')}></img>
-            <Typography padding={1}>Save</Typography>
-          </Button>
-        </Box>
-      </Popover>
+      <ShellForm
+        openValue={openValue}
+        handleFormDisplay={handleFormDisplay}
+        key={1}
+      />
     </Box>
   );
 }
