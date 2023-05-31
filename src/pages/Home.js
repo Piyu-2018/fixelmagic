@@ -28,6 +28,14 @@ const CustomButton = styled(Button)(({ theme }) => ({
   borderColor: '#222428',
 }));
 
+const CustomButtonAll = styled(Button)(({ theme }) => ({
+  borderRadius: 360,
+  textTransform: 'capitalize',
+  backgroundColor: ' #ffffff',
+  color: '#111214',
+  borderColor: '#ffffff',
+}));
+
 const CustomButtonN = styled(Button)(({ theme }) => ({
   borderRadius: 360,
   textTransform: 'capitalize',
@@ -110,7 +118,7 @@ export default function Home() {
           sx={{ marginBottom: 3 }}
         >
           <Grid display={'flex'} gap={3} alignItems="flex-start" item xs={8}>
-            <CustomButton variant="outlined">All</CustomButton>
+            <CustomButtonAll variant="outlined">All</CustomButtonAll>
             <CustomButton variant="outlined">Freeze</CustomButton>
             <CustomButton variant="outlined">Modular</CustomButton>
             <CustomButton variant="outlined">PegBoard</CustomButton>
@@ -131,7 +139,12 @@ export default function Home() {
 
         <TableContainer
           component={Paper}
-          sx={{ marginBottom: 2, backgroundColor: '#222428' }}
+          sx={{
+            marginBottom: 2,
+            backgroundColor: '#222428',
+            borderRadius: 8,
+            padding: 2,
+          }}
         >
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableBody>

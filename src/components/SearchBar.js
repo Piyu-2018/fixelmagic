@@ -59,7 +59,7 @@ const CustomButton = styled(Button)(({ theme }) => ({
 
 export default function SearchBar() {
   return (
-    <Card sx={{ marginBottom: 3, backgroundColor: '#222428' }}>
+    <Box sx={{ marginBottom: 3, backgroundColor: '#222428', borderRadius: 8 }}>
       <Box
         display={'flex'}
         flexDirection={'row'}
@@ -97,6 +97,6 @@ export default function SearchBar() {
         />
       </Search>
       <br></br>
-    </Card>
+    </Box>
   );
 }
