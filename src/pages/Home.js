@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { styled, useTheme, alpha } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -11,15 +11,17 @@ import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import { Divider } from '@mui/material';
 
 import ShellForm from '../components/ShellForm';
 import SideNavbar from '../components/SideNavbar';
 import SearchBar from '../components/SearchBar';
-import { Divider } from '@mui/material';
 
+//Drop down data
 const shelfT = ['Small-Freeze', 'Medium-Freeze', 'Large-Freeze'];
 const shelfD = ['200x150x40cm', '400x300x80cm', '4800x600x160cm'];
 
+//Create customize button
 const CustomButton = styled(Button)(({ theme }) => ({
   borderRadius: 360,
   textTransform: 'capitalize',
@@ -28,19 +30,13 @@ const CustomButton = styled(Button)(({ theme }) => ({
   borderColor: '#222428',
 }));
 
-const CustomButtonAll = styled(Button)(({ theme }) => ({
-  borderRadius: 360,
-  textTransform: 'capitalize',
-  backgroundColor: ' #ffffff',
-  color: '#111214',
-  borderColor: '#ffffff',
-}));
-
+//Create customize button
 const CustomButtonN = styled(Button)(({ theme }) => ({
   borderRadius: 360,
   textTransform: 'capitalize',
 }));
 
+//Create customize button
 const CustomButtonDel = styled(Button)(({ theme }) => ({
   borderRadius: 360,
   textTransform: 'capitalize',
@@ -58,14 +54,16 @@ export default function Home() {
   const [shelfEditableArray, setShelfEditableArray] = useState([]);
   const [editableIndex, setEditableIndex] = useState(0);
 
-  const handleFormDisplay = () => {
-    setOpenValue((prevOpenValue) => !prevOpenValue);
-  };
-
   useEffect(() => {
     setAllSshelfData();
   }, []);
 
+  //Input & update form
+  const handleFormDisplay = () => {
+    setOpenValue((prevOpenValue) => !prevOpenValue);
+  };
+
+  //Get shelf data from local storage
   const setAllSshelfData = async () => {
     const allShelf = localStorage.getItem('allShelf')
       ? JSON.parse(localStorage.getItem('allShelf'))
@@ -74,11 +72,13 @@ export default function Home() {
     await setEditableData(allShelf);
   };
 
+  //Maintain editable shelf data
   const setEditableData = async (allShelfData) => {
     const editableArray = Array(allShelfData.length).fill(false);
     setShelfEditableArray(editableArray);
   };
 
+  //Delete shelf data
   const deleteShelf = (deletingIndex) => {
     try {
       const newArray = shelfArray.filter((_, index) => index !== deletingIndex);
@@ -89,8 +89,8 @@ export default function Home() {
     }
   };
 
+  //To edit the shelf
   const handleEdit = async (editableIndex) => {
-    console.log(shelfEditableArray);
     const newEditableArray = await Promise.all(
       shelfEditableArray.map((element, index) => {
         if (index === editableIndex) {
@@ -118,7 +118,7 @@ export default function Home() {
           sx={{ marginBottom: 3 }}
         >
           <Grid display={'flex'} gap={3} alignItems="flex-start" item xs={8}>
-            <CustomButtonAll variant="outlined">All</CustomButtonAll>
+            <CustomButton variant="outlined">All</CustomButton>
             <CustomButton variant="outlined">Freeze</CustomButton>
             <CustomButton variant="outlined">Modular</CustomButton>
             <CustomButton variant="outlined">PegBoard</CustomButton>

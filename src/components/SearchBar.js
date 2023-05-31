@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 
+//Style the search
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: 200,
@@ -24,6 +25,7 @@ const Search = styled('div')(({ theme }) => ({
   },
 }));
 
+//Style the search bar icon wrapper
 const SearchIconWrapper = styled('div')(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: '100%',
@@ -35,12 +37,10 @@ const SearchIconWrapper = styled('div')(({ theme }) => ({
   color: '#8b8c8e',
 }));
 
+//Style the searchbar
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: '#8b8c8e',
   '& .MuiInputBase-input': {
-    // padding: theme.spacing(1, 1, 1, 0),
-    // // vertical padding + font size from searchIcon
-    // paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
     [theme.breakpoints.up('md')]: {
@@ -51,6 +51,7 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+//Create customize button
 const CustomButton = styled(Button)(({ theme }) => ({
   borderRadius: '50%',
   backgroundColor: '#ffcc00',

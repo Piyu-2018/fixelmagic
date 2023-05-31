@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { styled, useTheme, alpha } from '@mui/material/styles';
+import React, { useState } from 'react';
+import { styled } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import { AlignVerticalCenter } from '@mui/icons-material';
 
+//Create customize button
 const CustomButtonN = styled(Button)(({ theme }) => ({
   borderRadius: 360,
   textTransform: 'capitalize',
 }));
 
+//Create customize button
 const CustomButtonDel = styled(Button)(({ theme }) => ({
   borderRadius: 360,
   textTransform: 'capitalize',
@@ -44,6 +44,7 @@ export default function ShellForm(props) {
 
   const [open, setOpen] = useState(props.openValue);
 
+  //Add a new shelf
   const submit = () => {
     let allShelf = localStorage.getItem('allShelf')
       ? JSON.parse(localStorage.getItem('allShelf'))
@@ -56,10 +57,16 @@ export default function ShellForm(props) {
       shelfNoOfPar,
     });
     localStorage.setItem('allShelf', JSON.stringify(allShelf));
-    // window.location.reload();
+    setShelfId('');
+    setShelfName('');
+    setShelfType('');
+    setShelfDimention('');
+    setShelfNoOfPar('');
     props.setAllSshelfData();
+    props.handleFormDisplay();
   };
 
+  //Update shelf data
   const updateShelf = async () => {
     try {
       const newAllShelf = await Promise.all(
@@ -113,7 +120,7 @@ export default function ShellForm(props) {
         <Box>
           <Typography color={'#8b8c8e'}># 24DGH54 Medium-Freeze</Typography>
           <Typography align={'left'} color={'#ececec'} fontSize={20}>
-            Add new shelf
+            {props.isEditable ? props.data.shelfName : 'Add new shelf'}
           </Typography>
         </Box>
         <Button
@@ -140,16 +147,25 @@ export default function ShellForm(props) {
         borderRadius={8}
       >
         <TextField
-          style={{
-            color: '#8b8c8e',
-          }}
           id="shelf-id"
           label="Shelf id"
           variant="filled"
+          InputLabelProps={{
+            style: { color: '#8b8c8e' },
+          }}
+          InputProps={{
+            style: { border: '1px solid #8b8c8e', borderRadius: 100 },
+          }}
           onChange={(e) => {
             setShelfId(e.target.value);
           }}
           defaultValue={props.isEditable ? props.data.shelfId : shelfId}
+          inputProps={{
+            style: { color: '#ececec' },
+          }}
+          SelectDisplayProps={{
+            style: { color: '#ececec' },
+          }}
         />
         <br></br>
 
@@ -157,23 +173,45 @@ export default function ShellForm(props) {
           id="shelf-name"
           label="Shelf name"
           variant="filled"
+          InputLabelProps={{
+            style: { color: '#8b8c8e' },
+          }}
+          InputProps={{
+            style: { border: '1px solid #8b8c8e', borderRadius: 100 },
+          }}
           onChange={(e) => {
             setShelfName(e.target.value);
           }}
           defaultValue={props.isEditable ? props.data.shelfName : shelfName}
+          inputProps={{
+            style: { color: '#ececec' },
+          }}
+          SelectDisplayProps={{
+            style: { color: '#ececec' },
+          }}
         />
         <br></br>
 
-        <FormControl variant="filled">
-          <InputLabel id="shelf-type">Shelf type</InputLabel>
+        <FormControl
+          variant="filled"
+          sx={{ border: '1px solid #8b8c8e', borderRadius: 100 }}
+        >
+          <InputLabel id="shelf-type" style={{ color: '#8b8c8e' }}>
+            Shelf type
+          </InputLabel>
           <Select
             labelId="shelf-type"
             id="shelf-type"
-            //   value={age}
             onChange={(e) => {
               setShelfType(e.target.value);
             }}
             defaultValue={props.isEditable ? props.data.shelfType : shelfType}
+            inputProps={{
+              style: { color: '#ececec' },
+            }}
+            SelectDisplayProps={{
+              style: { color: '#ececec' },
+            }}
           >
             <MenuItem value={1}>Small-Freeze</MenuItem>
             <MenuItem value={2}>Medium-Freeze</MenuItem>
@@ -182,8 +220,13 @@ export default function ShellForm(props) {
         </FormControl>
         <br></br>
 
-        <FormControl variant="filled">
-          <InputLabel id="shelf-dimensions">Shelf dimensions</InputLabel>
+        <FormControl
+          variant="filled"
+          sx={{ border: '1px solid #8b8c8e', borderRadius: 100 }}
+        >
+          <InputLabel id="shelf-dimensions" style={{ color: '#8b8c8e' }}>
+            Shelf dimensions
+          </InputLabel>
           <Select
             labelId="shelf-dimensions"
             id="shelf-dimensions"
@@ -194,6 +237,12 @@ export default function ShellForm(props) {
             defaultValue={
               props.isEditable ? props.data.shelfDimention : shelfDimention
             }
+            inputProps={{
+              style: { color: '#ececec' },
+            }}
+            SelectDisplayProps={{
+              style: { color: '#ececec' },
+            }}
           >
             <MenuItem value={1}>200x150x40cm</MenuItem>
             <MenuItem value={2}>400x300x80cm</MenuItem>
@@ -202,8 +251,13 @@ export default function ShellForm(props) {
         </FormControl>
         <br></br>
 
-        <FormControl variant="filled">
-          <InputLabel id="no-of-partitions">No. of partitions</InputLabel>
+        <FormControl
+          variant="filled"
+          sx={{ border: '1px solid #8b8c8e', borderRadius: 100 }}
+        >
+          <InputLabel id="no-of-partitions" style={{ color: '#8b8c8e' }}>
+            No. of partitions
+          </InputLabel>
           <Select
             labelId="no-of-partitions"
             id="no-of-partitions"
@@ -214,6 +268,12 @@ export default function ShellForm(props) {
             defaultValue={
               props.isEditable ? props.data.shelfNoOfPar : shelfNoOfPar
             }
+            inputProps={{
+              style: { color: '#ececec' },
+            }}
+            SelectDisplayProps={{
+              style: { color: '#ececec' },
+            }}
           >
             <MenuItem value={1}>2</MenuItem>
             <MenuItem value={2}>5</MenuItem>
