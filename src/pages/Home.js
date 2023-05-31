@@ -142,7 +142,7 @@ export default function Home() {
           sx={{
             marginBottom: 2,
             backgroundColor: '#222428',
-            borderRadius: 8,
+            borderRadius: 10,
             padding: 2,
           }}
         >

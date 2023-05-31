@@ -93,11 +93,11 @@ export default function ShellForm(props) {
         vertical: 'bottom',
         horizontal: 'center',
       }}
-      sx={{ backgroundColor: '#222428', paddingRight: 50 }}
+      sx={{ backgroundColor: '#222428' }}
       PaperProps={{
         style: {
           width: '30%',
-          borderRadius: 8,
+          borderRadius: 10,
           backgroundColor: '#080808',
         },
       }}
