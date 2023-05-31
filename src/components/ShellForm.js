@@ -1,20 +1,45 @@
 import React, { useEffect, useState } from 'react';
+import { styled, useTheme, alpha } from '@mui/material/styles';
 import Popover from '@mui/material/Popover';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 
+const CustomButtonN = styled(Button)(({ theme }) => ({
+  borderRadius: 360,
+  textTransform: 'capitalize',
+}));
+
+const CustomButtonDel = styled(Button)(({ theme }) => ({
+  borderRadius: 360,
+  textTransform: 'capitalize',
+  backgroundColor: '#141518',
+  color: '#8b8c8e',
+  borderColor: '#8b8c8e',
+}));
+
 export default function ShellForm(props) {
-  const [shelfId, setShelfId] = useState('');
-  const [shelfName, setShelfName] = useState('');
-  const [shelfType, setShelfType] = useState();
-  const [shelfDimention, setShelfDimention] = useState();
-  const [shelfNoOfPar, setShelfNoOfPar] = useState();
+  const [shelfId, setShelfId] = useState(
+    props.isEditable ? props.data.shelfId : ''
+  );
+  const [shelfName, setShelfName] = useState(
+    props.isEditable ? props.data.shelfName : ''
+  );
+  const [shelfType, setShelfType] = useState(
+    props.isEditable ? props.data.shelfType : ''
+  );
+  const [shelfDimention, setShelfDimention] = useState(
+    props.isEditable ? props.data.shelfDimention : ''
+  );
+  const [shelfNoOfPar, setShelfNoOfPar] = useState(
+    props.isEditable ? props.data.shelfNoOfPar : ''
+  );
 
   const [open, setOpen] = useState(props.openValue);
 
@@ -30,6 +55,34 @@ export default function ShellForm(props) {
       shelfNoOfPar,
     });
     localStorage.setItem('allShelf', JSON.stringify(allShelf));
+    // window.location.reload();
+    props.setAllSshelfData();
+  };
+
+  const updateShelf = async () => {
+    try {
+      const newAllShelf = await Promise.all(
+        JSON.parse(localStorage.getItem('allShelf')).map(
+          (singleShelf, index) => {
+            if (index === props.editableIndex) {
+              return {
+                shelfId,
+                shelfName,
+                shelfType,
+                shelfDimention,
+                shelfNoOfPar,
+              };
+            }
+            return singleShelf;
+          }
+        )
+      );
+
+      localStorage.setItem('allShelf', JSON.stringify(newAllShelf));
+      props.setAllSshelfData();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -42,124 +95,158 @@ export default function ShellForm(props) {
       PaperProps={{
         style: {
           width: '30%',
+          backgroundColor: '#222428',
         },
       }}
     >
-      <Box
-        display={'flex'}
-        flexDirection={'row'}
-        justifyContent="space-between"
-        alignItems={'center'}
-        paddingX={4}
-        paddingY={4}
-      >
-        <Box>
-          <Typography># 24DGH54 Medium-Freeze</Typography>
-          <h2>Add new shelf</h2>
+      <Card sx={{ backgroundColor: '#222428' }}>
+        <Box
+          display={'flex'}
+          flexDirection={'row'}
+          justifyContent="space-between"
+          alignItems={'center'}
+          paddingX={4}
+          paddingY={4}
+          backgroundColor={'#222428'}
+        >
+          <Box>
+            <Typography color={'#8b8c8e'}># 24DGH54 Medium-Freeze</Typography>
+            <Typography align={'left'} color={'#ececec'} fontSize={20}>
+              Add new shelf
+            </Typography>
+          </Box>
+          <Button
+            onClick={() => {
+              if (props.isEditable) {
+                props.editableFormClosingFunction();
+              } else {
+                props.handleFormDisplay();
+              }
+            }}
+          >
+            <img src={require('../assets/icons/Close.png')}></img>
+          </Button>
         </Box>
-        <Button
-          onClick={() => {
-            props.handleFormDisplay();
-          }}
+
+        <Box
+          paddingX={4}
+          paddingY={4}
+          display={'flex'}
+          gap={0.5}
+          flexDirection={'column'}
         >
-          <img src={require('../assets/icons/Close.png')}></img>
-        </Button>
-      </Box>
-
-      <Box
-        paddingX={4}
-        paddingY={4}
-        display={'flex'}
-        gap={0.5}
-        flexDirection={'column'}
-      >
-        <TextField
-          id="shelf-id"
-          label="Shelf id"
-          variant="filled"
-          onChange={(e) => {
-            setShelfId(e.target.value);
-          }}
-        />
-        <br></br>
-
-        <TextField
-          id="shelf-name"
-          label="Shelf name"
-          variant="filled"
-          onChange={(e) => {
-            setShelfName(e.target.value);
-          }}
-        />
-        <br></br>
-
-        <FormControl variant="filled">
-          <InputLabel id="shelf-type">Shelf type</InputLabel>
-          <Select
-            labelId="shelf-type"
-            id="shelf-type"
-            //   value={age}
+          <TextField
+            style={{
+              color: '#8b8c8e',
+            }}
+            id="shelf-id"
+            label="Shelf id"
+            variant="filled"
             onChange={(e) => {
-              setShelfType(e.target.value);
+              setShelfId(e.target.value);
+            }}
+            defaultValue={props.isEditable ? props.data.shelfId : shelfId}
+          />
+          <br></br>
+
+          <TextField
+            id="shelf-name"
+            label="Shelf name"
+            variant="filled"
+            onChange={(e) => {
+              setShelfName(e.target.value);
+            }}
+            defaultValue={props.isEditable ? props.data.shelfName : shelfName}
+          />
+          <br></br>
+
+          <FormControl variant="filled">
+            <InputLabel id="shelf-type">Shelf type</InputLabel>
+            <Select
+              labelId="shelf-type"
+              id="shelf-type"
+              //   value={age}
+              onChange={(e) => {
+                setShelfType(e.target.value);
+              }}
+              defaultValue={props.isEditable ? props.data.shelfType : shelfType}
+            >
+              <MenuItem value={1}>Small-Freeze</MenuItem>
+              <MenuItem value={2}>Medium-Freeze</MenuItem>
+              <MenuItem value={3}>Large-Freeze</MenuItem>
+            </Select>
+          </FormControl>
+          <br></br>
+
+          <FormControl variant="filled">
+            <InputLabel id="shelf-dimensions">Shelf dimensions</InputLabel>
+            <Select
+              labelId="shelf-dimensions"
+              id="shelf-dimensions"
+              //   value={age}
+              onChange={(e) => {
+                setShelfDimention(e.target.value);
+              }}
+              defaultValue={
+                props.isEditable ? props.data.shelfDimention : shelfDimention
+              }
+            >
+              <MenuItem value={1}>200x150x40cm</MenuItem>
+              <MenuItem value={2}>400x300x80cm</MenuItem>
+              <MenuItem value={3}>4800x600x160cm</MenuItem>
+            </Select>
+          </FormControl>
+          <br></br>
+
+          <FormControl variant="filled">
+            <InputLabel id="no-of-partitions">No. of partitions</InputLabel>
+            <Select
+              labelId="no-of-partitions"
+              id="no-of-partitions"
+              //   value={age}
+              onChange={(e) => {
+                setShelfNoOfPar(e.target.value);
+              }}
+              defaultValue={
+                props.isEditable ? props.data.shelfNoOfPar : shelfNoOfPar
+              }
+            >
+              <MenuItem value={1}>2</MenuItem>
+              <MenuItem value={2}>5</MenuItem>
+              <MenuItem value={3}>10</MenuItem>
+            </Select>
+          </FormControl>
+          <br></br>
+        </Box>
+
+        <Box paddingX={4} paddingY={4} display={'flex'} gap={2}>
+          <CustomButtonDel
+            onClick={() => {
+              if (props.isEditable) {
+                props.editableFormClosingFunction();
+              } else {
+                props.handleFormDisplay();
+              }
             }}
           >
-            <MenuItem value={1}>Small-Freeze</MenuItem>
-            <MenuItem value={2}>Medium-Freeze</MenuItem>
-            <MenuItem value={3}>Large-Freeze</MenuItem>
-          </Select>
-        </FormControl>
-        <br></br>
-
-        <FormControl variant="filled">
-          <InputLabel id="shelf-dimensions">Shelf dimensions</InputLabel>
-          <Select
-            labelId="shelf-dimensions"
-            id="shelf-dimensions"
-            //   value={age}
-            onChange={(e) => {
-              setShelfDimention(e.target.value);
+            <img src={require('../assets/icons/Close.png')}></img>
+            <Typography padding={1}>Cancel</Typography>
+          </CustomButtonDel>
+          <CustomButtonN
+            variant="contained"
+            onClick={() => {
+              if (props.isEditable) {
+                updateShelf();
+              } else {
+                submit();
+              }
             }}
           >
-            <MenuItem value={1}>200x150x40cm</MenuItem>
-            <MenuItem value={2}>400x300x80cm</MenuItem>
-            <MenuItem value={3}>4800x600x160cm</MenuItem>
-          </Select>
-        </FormControl>
-        <br></br>
-
-        <FormControl variant="filled">
-          <InputLabel id="no-of-partitions">No. of partitions</InputLabel>
-          <Select
-            labelId="no-of-partitions"
-            id="no-of-partitions"
-            //   value={age}
-            onChange={(e) => {
-              setShelfNoOfPar(e.target.value);
-            }}
-          >
-            <MenuItem value={1}>2</MenuItem>
-            <MenuItem value={2}>5</MenuItem>
-            <MenuItem value={3}>10</MenuItem>
-          </Select>
-        </FormControl>
-        <br></br>
-      </Box>
-
-      <Box paddingX={4} paddingY={4}>
-        <Button>
-          <img src={require('../assets/icons/Close.png')}></img>
-          <Typography padding={1}>Cancel</Typography>
-        </Button>
-        <Button
-          variant="contained"
-          onClick={() => {
-            submit();
-          }}
-        >
-          <img src={require('../assets/icons/Check-small.png')}></img>
-          <Typography padding={1}>Save</Typography>
-        </Button>
-      </Box>
+            <img src={require('../assets/icons/Check-small.png')}></img>
+            <Typography padding={1}>Save</Typography>
+          </CustomButtonN>
+        </Box>
+      </Card>
     </Popover>
   );
 }
